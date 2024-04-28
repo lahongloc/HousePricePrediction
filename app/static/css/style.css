@@ -1,0 +1,43 @@
+.container {
+    margin-top: 2.5rem;
+    border-radius: 22.5px;
+
+    background-color: white;
+    padding-top: 2.5rem;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.25); /* Adjust opacity as needed */
+  backdrop-filter: blur(10px); /* Adjust blur strength as needed */
+  border-radius: 10px; /* Adjust border radius as needed */
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Adjust shadow properties as needed */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+
+body {
+    background-image: url('https://archivaldesigns.com/cdn/shop/products/Peach-Tree-Front_1200x.jpg?v=1648224612');
+    background-repeat: no-repeat; /* Prevent the background image from repeating */
+    background-size: cover; /* Cover the entire viewport with the background image */
+    background-position: center;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+}
+
+.header {
+    height: 3.5rem;
+    width: max-content;
+    margin: auto;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 17px;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    padding: 1.25rem;
+}
