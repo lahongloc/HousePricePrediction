@@ -1,19 +1,28 @@
-from app.Data import houseData
 import pandas as pd
+from app import dao
+from app.MLModels import house_price_prediction_models
 
-print(houseData.find_nearest_city(37.88, -122.23))
-# print(len(houseData.district_encoder.classes_))
-# print(len(houseData.data['District'].unique()))
+# print(house_price_prediction_models.region_encoder.classes_)
+# print(house_price_prediction_models.data['Region'].unique())
 
-district = pd.DataFrame(houseData.area_encoder.classes_)
-district_encoded = pd.DataFrame(houseData.data['Area'].unique())
+# area = pd.concat([pd.DataFrame(house_price_prediction_models.region_encoder.classes_),
+#                   house_price_prediction_models.data['Region'].unique()], axis=1)
 
-# temp = pd.concat([district, district_encoded], axis=1)
-area = pd.DataFrame()
-area['district'] = district
-area['district_encoded'] = district_encoded
-print(area)
+# region = pd.DataFrame()
+#
+# region['name'] = house_price_prediction_models.region_encoder.classes_
+# region['encoded_name'] = house_price_prediction_models.data['Region'].unique()
+# print(region.head())
 
+# print(house_price_prediction_models.data['Region'].isna())
+# print(house_price_prediction_models.data)
 
-
-
+a = [{
+    'longitude': -122.23,
+    'latitude': 37.88
+}]
+a_df = pd.DataFrame(a)
+distances, indices = house_price_prediction_models.tree.query(a_df[['longitude', 'latitude']], k=1)
+a_df['Region'] = house_price_prediction_models.regions_df.iloc[indices.flatten()]['name'].values
+region = dao.get_region_details(a_df['Region'][0])
+print(region[0])

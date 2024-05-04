@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Enum, DateT
 import pandas as pd
 from sklearn.datasets import fetch_california_housing
 from app.Data import houseData
+from app.MLModels import house_price_prediction_models
 
 
 class Housing(db.Model):
@@ -10,63 +11,45 @@ class Housing(db.Model):
     med_inc = Column(Float)
     house_age = Column(Integer)
     ave_rooms = Column(Float)
-    ave_bedrms = Column(Float)
-    population = Column(Integer)
     ave_occup = Column(Float)
     latitude = Column(Float)
     longitude = Column(Float)
+    region = Column(Integer)
     target = Column(Float)
-    area = Column(Float)
-    district = Column(Integer)
-    type = Column(Integer)
 
 
-class Area(db.Model):
+class Region(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
-    area_name = Column(String(50))
-    area = Column(Integer)
-    district = Column(Integer)
-    type = Column(Integer)
+    name = Column(String(50))
+    encoded_name = Column(Integer)
 
 
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
 
-        kv = pd.DataFrame(houseData.area_encoder.classes_)
-        kv_encoded = pd.DataFrame(houseData.data['Area'].unique())
-        temp = pd.DataFrame()
-        temp['area_name'] = kv
-        temp['Area'] = kv_encoded
+        a = house_price_prediction_models.data
 
-        #
-        area = houseData.data[['Area', 'District', 'Type']]
-        area = area.drop_duplicates()
-
-        rs = pd.merge(temp, area, on="Area", how="inner")
-        # print(rs)
-
-        for i in range(0, len(rs)):
-            a = Area(area_name=rs["area_name"][i],
-                     area=rs["Area"][i],
-                     district=rs["District"][i],
-                     type=rs["Type"][i])
-            db.session.add(a)
-            db.session.commit()
-        #
-        a = houseData.data
         for i in range(0, len(a)):
             h = Housing(med_inc=a["MedInc"][i],
                         house_age=a["HouseAge"][i],
                         ave_rooms=a["AveRooms"][i],
-                        ave_bedrms=a["AveBedrms"][i],
-                        population=a["Population"][i],
                         ave_occup=a["AveOccup"][i],
                         latitude=a["Latitude"][i],
                         longitude=a["Longitude"][i],
-                        target=a["target"][i],
-                        area=a['Area'][i],
-                        district=a['District'][i],
-                        type=a['Type'][i])
+                        region=a["Region"][i],
+                        target=a["target"][i])
             db.session.add(h)
-            db.session.commit()
+        db.session.commit()
+
+        region = pd.DataFrame()
+
+        region['name'] = house_price_prediction_models.region_encoder.classes_
+        region['encoded_name'] = house_price_prediction_models.data['Region'].unique()
+        for i in range(0, len(region)):
+            r = Region(name=region["name"][i],
+                       encoded_name=region["encoded_name"][i])
+            db.session.add(r)
+        db.session.commit()
+
+        # ================

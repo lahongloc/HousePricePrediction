@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import Housing, Area
+from app.models import Housing, Region
 
 
 def get_house():
@@ -8,7 +8,10 @@ def get_house():
         return houses
 
 
-def get_area_details(name):
+def get_region_details(name):
     with app.app_context():
-        house_details = db.session.query(Area.area, Area.district, Area.type).filter(Area.area_name.contains(name))
-        return house_details.first()
+        region = db.session.query(Region.encoded_name).filter(Region.name.contains(name))
+        return region.first()
+
+        # house_details = db.session.query(Area.area, Area.district, Area.type).filter(Area.area_name.contains(name))
+        # return house_details.first()
